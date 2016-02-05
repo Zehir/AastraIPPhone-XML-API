@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:simpleType name="textAttributeType">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="yes|no" />
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="modeType">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="normal|extended|fullscreen" />
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="integerAttributeType">
+ <xs:restriction base="xs:integer" />
+</xs:simpleType>
+
+<xs:simpleType name="verticalAlignType">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="top|middle|bottom" />
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="horizontalAlignType">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="left|middle|right" />
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="colorType">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="white|
+		      black|
+		      red|   
+		      green|
+		      brown|
+		      blue|
+		      magenta|
+		      cyan|
+		      lightgray|
+		      darkgray|
+		      lightred|
+		      lightgreen|
+		      yellow|
+		      lightblue|
+		      lightmagenta|
+		      lightcyan|
+		      "/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:complexType name="titleTagType" mixed="true">
+  <xs:attribute name="wrap" default="yes">
+     <xs:simpleType>
+       <xs:restriction base="xs:string">
+         <xs:pattern value="yes|no"/>
+       </xs:restriction>
+     </xs:simpleType>
+  </xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="lineTagType" mixed="true">
+ <xs:attribute name="Color" default="white" type="colorType"/>
+ <xs:attribute name="Size" default="regular">
+  <xs:simpleType>
+   <xs:restriction base="xs:string">
+    <xs:pattern value="double|regular|small|large" />
+   </xs:restriction>
+  </xs:simpleType>
+ </xs:attribute>
+ <xs:attribute name="Align" default="left">
+  <xs:simpleType>
+   <xs:restriction base="xs:string">
+    <xs:pattern value="right|left|center" />
+   </xs:restriction>
+  </xs:simpleType>
+ </xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="imageType"        mixed="true">
+ <xs:attribute  name="verticalAlign"    type="verticalAlignType"    />
+ <xs:attribute  name="horizontalAlign"  type="horizontalAlignType"  />
+ <xs:attribute name="height">
+  <xs:simpleType>
+   <xs:restriction base="xs:integer">
+    <xs:minInclusive value="0"  />
+    <xs:maxInclusive value="40" />
+   </xs:restriction>
+  </xs:simpleType>
+ </xs:attribute>
+ <xs:attribute  name="width" type="integerAttributeType" default="0" />
+</xs:complexType>
+
+<xs:complexType name="softKeyType">
+ <xs:sequence>
+  <xs:element name="Label" type="xs:string" />
+  <xs:element name="URI" type="xs:string" />
+ </xs:sequence>
+ <xs:attribute name="index" use="required">
+  <xs:simpleType>
+   <xs:restriction base="xs:integer">
+    <xs:minInclusive value="1" />
+    <xs:maxInclusive value="10" />
+   </xs:restriction>
+  </xs:simpleType>
+ </xs:attribute>
+ <xs:attribute name="icon" type="integerAttributeType" default="0" />
+</xs:complexType>
+
+<xs:complexType name="iconListType">
+ <xs:sequence>
+  <xs:element name="Icon" minOccurs="1" maxOccurs="unbounded">
+   <xs:complexType mixed="true">
+    <xs:attribute name="index" type="integerAttributeType" use="required" />
+   </xs:complexType>
+  </xs:element>
+ </xs:sequence>
+</xs:complexType>
+
+<xs:element name="AastraIPPhoneTextScreen">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="Title" type="titleTagType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Text">
+    <xs:simpleType>
+     <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="2000" />
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:element>
+   <xs:element name="Dial" minOccurs="0" maxOccurs="1">
+    <xs:complexType>
+     <xs:attribute name="line" use="optional">
+      <xs:simpleType>
+       <xs:restriction base="xs:integer">
+        <xs:minInclusive value="1" />
+        <xs:maxInclusive value="24" />
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:attribute>
+    </xs:complexType>
+   </xs:element>
+   <xs:element  name="SoftKey" type="softKeyType" minOccurs="0" maxOccurs="10"/>
+  </xs:sequence>
+  <xs:attribute name="destroyOnExit" type="textAttributeType"    default="no" />
+  <xs:attribute name="Beep"          type="textAttributeType"    default="no" />
+  <xs:attribute name="LockIn"        type="textAttributeType"    default="no" />
+  <xs:attribute name="Timeout"       type="integerAttributeType" default="45"  />
+  <xs:attribute name="cancelAction"  type="xs:string" />
+  <xs:attribute name="doneAction"    type="xs:string" />
+  <xs:attribute name="allowAnswer" type="xs:string" default="no"/>
+  <xs:attribute name="allowDTMF" type="xs:string" default="no"/>
+  <xs:attribute name="allowDrop" type="xs:string" default="no"/>
+  <xs:attribute name="allowConf" type="xs:string" default="no"/>
+  <xs:attribute name="allowXfer" type="xs:string" default="no"/>
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="AastraIPPhoneTextMenu">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="Title" type="titleTagType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="MenuItem" minOccurs="1" maxOccurs="30">
+    <xs:complexType>
+     <xs:all>
+      <xs:element name="Prompt" type="xs:string" minOccurs="0" maxOccurs="1" />
+      <xs:element name="URI" type="xs:string" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Dial" minOccurs="0" maxOccurs="1">
+       <xs:complexType>
+        <xs:attribute name="line" use="optional">
+         <xs:simpleType>
+          <xs:restriction base="xs:integer">
+           <xs:minInclusive value="1" />
+           <xs:maxInclusive value="24" />
+          </xs:restriction>
+         </xs:simpleType>
+        </xs:attribute>
+       </xs:complexType>
+      </xs:element>
+      <xs:element name="Selection" type="xs:string" minOccurs="0" maxOccurs="1" />
+     </xs:all>
+     <xs:attribute name="base" type="xs:string" />
+     <xs:attribute name="icon" type="integerAttributeType"  default="0" />
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="SoftKey"  type="softKeyType"  minOccurs="0" maxOccurs="10" />
+   <xs:element name="IconList" type="iconListType" minOccurs="0" maxOccurs="1" />
+  </xs:sequence>
+  <xs:attribute name="destroyOnExit" type="textAttributeType"    default="no" />
+  <xs:attribute name="Beep"          type="textAttributeType"    default="no" />
+  <xs:attribute name="LockIn"        type="textAttributeType"    default="no" />
+  <xs:attribute name="Timeout"       type="integerAttributeType" default="45"  />
+  <xs:attribute name="defaultIndex"  type="integerAttributeType" default="1"  />
+  <xs:attribute name="cancelAction"  type="xs:string" />
+  <xs:attribute name="style" type="xs:string" default="numbered" />
+  <xs:attribute name="allowAnswer" type="xs:string" default="no"/>
+  <xs:attribute name="wrapList" type="textAttributeType"   default="no" />
+  <xs:attribute name="numberLaunch" type="textAttributeType"   default="no" />
+  <xs:attribute name="scrollConstrain" type="textAttributeType"   default="no" />
+  <xs:attribute name="unitScroll"      type="textAttributeType"   default="no" /> 
+  <xs:attribute name="scrollUp"        type="xs:string" />
+  <xs:attribute name="scrollDown"      type="xs:string" />
+  <xs:attribute name="allowDrop" type="xs:string" default="no"/>
+  <xs:attribute name="allowConf" type="xs:string" default="no"/>
+  <xs:attribute name="allowXfer" type="xs:string" default="no"/>
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="AastraIPPhoneInputScreen">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="Title" type="titleTagType" minOccurs="0" maxOccurs="1" />
+   <xs:element name="Prompt" minOccurs="0" maxOccurs="1" />
+   <xs:element name="URL" />
+   <xs:element name="Parameter" minOccurs="0" maxOccurs="1" />
+   <xs:element name="Default" minOccurs="0" maxOccurs="1" />
+   <xs:element name="Selection" minOccurs="0" maxOccurs="1" />
+   <xs:element name="InputField" minOccurs="0" maxOccurs="10">
+      <xs:complexType>
+         <xs:sequence>
+   	    <xs:element name="Prompt" minOccurs="0" maxOccurs="1" />
+   	    <xs:element name="Parameter" minOccurs="0" maxOccurs="1" />
+   	    <xs:element name="Default" minOccurs="0" maxOccurs="1" />
+            <xs:element name="Selection" minOccurs="0" maxOccurs="1" />
+   	    <xs:element name="SoftKey" type="softKeyType" minOccurs="0" maxOccurs="10"/>
+         </xs:sequence>
+         <xs:attribute name="type" use="optional">
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+     	          <xs:pattern value="IP|string|stringN|number|timeUS|dateUS|timeInt|dateInt|Empty" />
+    	       </xs:restriction>
+   	    </xs:simpleType>
+  	 </xs:attribute>
+	 <xs:attribute name="password"      type="textAttributeType"    default="no"  />
+	 <xs:attribute name="editable"      type="textAttributeType"    default="yes" />
+     </xs:complexType>
+   </xs:element>
+  </xs:sequence>
+  <xs:attribute name="type" use="required">
+   <xs:simpleType>
+    <xs:restriction base="xs:string">
+     <xs:pattern value="IP|string|stringN|number|timeUS|dateUS|timeInt|dateInt" />
+    </xs:restriction>
+   </xs:simpleType>
+  </xs:attribute>
+  <xs:attribute name="password"      type="textAttributeType"    default="no"  />
+  <xs:attribute name="destroyOnExit" type="textAttributeType"    default="no"  />
+  <xs:attribute name="editable"      type="textAttributeType"    default="yes" />
+  <xs:attribute name="Beep"          type="textAttributeType"    default="no"  />
+  <xs:attribute name="inputLanguage" use="optional" default="English">
+	<xs:simpleType>
+       	<xs:restriction base="xs:string">
+     	       	<xs:pattern value="English|French|Spanish|German|Italian|Russian|Portuguese|Français|Español|Deutsch|Italiano|Русский|Português|Nordic" />
+    		</xs:restriction>
+  	</xs:simpleType>
+  </xs:attribute>
+  <xs:attribute name="LockIn"        type="textAttributeType"    default="no" />
+  <xs:attribute name="Timeout"       type="integerAttributeType" default="45" />
+  <xs:attribute name="defaultIndex"  type="integerAttributeType" default="1" />
+  <xs:attribute name="cancelAction"  type="xs:string" />
+  <xs:attribute name="allowAnswer" type="xs:string" default="no"/>
+  <xs:attribute name="allowDrop" type="xs:string" default="no"/>
+  <xs:attribute name="allowConf" type="xs:string" default="no"/>
+  <xs:attribute name="allowXfer" type="xs:string" default="no"/>
+  <xs:attribute name="displayMode" default="uncondensed">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+         <xs:pattern value="condensed|uncondensed" />
+       </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="AastraIPPhoneDirectory">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="Title" type="xs:string" />
+   <xs:element name="MenuItem" minOccurs="1" maxOccurs="15">
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="Prompt" type="xs:string" />
+      <xs:element name="URI" type="xs:string" />
+     </xs:sequence>
+     <xs:attribute name="base" type="xs:string" />
+     <xs:attribute name="icon" type="integerAttributeType"  default="0" />
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="SoftKey" type="softKeyType" minOccurs="0" maxOccurs="10"   />
+   <xs:element name="IconList" type="iconListType" minOccurs="0" maxOccurs="1" />
+  </xs:sequence>
+  <xs:attribute name="destroyOnExit" type="textAttributeType"   default="no" />
+  <xs:attribute name="Beep"          type="textAttributeType"   default="no" />
+  <xs:attribute name="LockIn"        type="textAttributeType"    default="no" />
+  <xs:attribute name="Timeout"       type="integerAttributeType" default="45" />
+  <xs:attribute name="next"          type="xs:string" />
+  <xs:attribute name="previous"      type="xs:string" />
+   <xs:attribute name="cancelAction"  type="xs:string" />
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="AastraIPPhoneExecute">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="ExecuteItem" minOccurs="0" maxOccurs="unbounded">
+    <xs:complexType>
+     <xs:attribute name="URI"           type="xs:string" />
+     <xs:attribute name="interruptCall" type="textAttributeType" default="yes" />
+    </xs:complexType>
+   </xs:element>
+  </xs:sequence>
+  <xs:attribute name="Beep"                 type="textAttributeType" default="no" />
+  <xs:attribute name="triggerDestroyOnExit" type="textAttributeType" default="no"  />
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="AastraIPPhoneStatus">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="Session" type="xs:string" minOccurs="0" />
+   <xs:element name="Message">
+    <xs:complexType mixed="true">
+     <xs:attribute name="index"   type="integerAttributeType" use="required" />
+     <xs:attribute name="type">
+      <xs:simpleType>
+       <xs:restriction base="xs:string">
+        <xs:pattern value="alert" />
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:attribute>
+     <xs:attribute name="Timeout" type="integerAttributeType" default="3" />
+	 <xs:attribute name="URI" type="xs:string" /> 
+	 <xs:attribute name="icon" type="integerAttributeType"  default="0" />
+    </xs:complexType>
+   </xs:element> 
+   <xs:element name="IconList" type="iconListType" minOccurs="0" maxOccurs="1" />
+  </xs:sequence>
+  <xs:attribute name="Beep" type="textAttributeType" default="no" />
+  <xs:attribute name="triggerDestroyOnExit"  type="textAttributeType"  default="no"  />
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="AastraIPPhoneConfiguration">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="ConfigurationItem" minOccurs="0" maxOccurs="unbounded">
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="Parameter" type="xs:string"  />
+      <xs:element name="Value"     type="xs:string"  />
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+  </xs:sequence>
+  <xs:attribute name="Beep" type="textAttributeType"  default="no"  />
+  <xs:attribute name="triggerDestroyOnExit"  type="textAttributeType"  default="no"  />
+ </xs:complexType>
+</xs:element>
+
+<xs:group name="linesAndScroll">
+   <xs:sequence>
+       <xs:element name="Scroll" minOccurs="1" maxOccurs="1">
+       	  <xs:complexType>
+    	     <xs:sequence>
+     	        <xs:element name="Line" type="lineTagType" minOccurs="1" maxOccurs="unbounded" />
+             </xs:sequence>
+             <xs:attribute name="Height" type="integerAttributeType" default="1" />
+          </xs:complexType>
+       </xs:element>
+       <xs:element name="Line" type="lineTagType" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
+</xs:group>
+
+<xs:element name="AastraIPPhoneFormattedTextScreen">
+ <xs:complexType>
+  <xs:sequence>
+    <xs:element name="Line" type="lineTagType" minOccurs="0" maxOccurs="unbounded" />
+    <xs:group ref="linesAndScroll" minOccurs="0" maxOccurs="1"/>
+    <xs:element name="Dial" minOccurs="0" maxOccurs="1">
+     <xs:complexType>
+      <xs:attribute name="line" use="optional">
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:minInclusive value="1" />
+         <xs:maxInclusive value="24" />
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:attribute>
+     </xs:complexType>
+    </xs:element>
+    <xs:element  name="SoftKey" type="softKeyType" minOccurs="0" maxOccurs="10"    />
+  </xs:sequence>
+  <xs:attribute name="destroyOnExit"  type="textAttributeType"  default="no"  />
+  <xs:attribute name="Beep"           type="textAttributeType"  default="no"  />
+  <xs:attribute name="LockIn"         type="textAttributeType"    default="no" />
+  <xs:attribute name="Timeout"        type="integerAttributeType" default="45"  />
+  <xs:attribute name="cancelAction"   type="xs:string" />
+  <xs:attribute name="doneAction"     type="xs:string" />
+  <xs:attribute name="allowAnswer"    type="xs:string" default="no"/>
+  <xs:attribute name="allowDTMF" type="xs:string" default="no"/>
+  <xs:attribute name="allowDrop" type="xs:string" default="no"/>
+  <xs:attribute name="allowConf" type="xs:string" default="no"/>
+  <xs:attribute name="allowXfer" type="xs:string" default="no"/>
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="AastraIPPhoneImageScreen">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="Image" type="imageType" />
+   <xs:element name="SoftKey" type="softKeyType" minOccurs="0" maxOccurs="10" />
+  </xs:sequence>
+  <xs:attribute  name="destroyOnExit" type="textAttributeType"    default="no"  />
+  <xs:attribute  name="Beep"          type="textAttributeType"    default="no"  />
+  <xs:attribute  name="mode"          type="modeType"             default="normal" />
+  <xs:attribute  name="LockIn"        type="textAttributeType"    default="no" />
+  <xs:attribute  name="Timeout"       type="integerAttributeType" default="45" />
+  <xs:attribute  name="imageAction"   type="xs:string" />
+  <xs:attribute  name="doneAction"    type="xs:string" />
+  <xs:attribute  name="cancelAction"  type="xs:string" />
+  <xs:attribute  name="allowDTMF"     type="xs:string" default="no"/>
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="AastraIPPhoneImageMenu">
+ <xs:complexType>
+  <xs:sequence>
+   <xs:element name="Image" type="imageType" />
+   <xs:element name="URIList">
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="URI" minOccurs="0" maxOccurs="12">
+       <xs:complexType mixed="true">
+        <xs:attribute name="base" />
+        <xs:attribute name="key" use="required" >
+         <xs:simpleType>
+          <xs:restriction base="xs:string">
+           <xs:pattern value="[0-9]|#|\*" />
+          </xs:restriction>
+         </xs:simpleType>
+        </xs:attribute>
+       </xs:complexType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="SoftKey"   type="softKeyType"  minOccurs="0" maxOccurs="10" />
+   <xs:element name="IconList"  type="iconListType" minOccurs="0" maxOccurs="1" />
+  </xs:sequence>
+  <xs:attribute name="destroyOnExit" type="textAttributeType"    default="no"  />
+  <xs:attribute name="Beep"          type="textAttributeType"    default="no"  />
+  <xs:attribute name="mode"          type="modeType"             default="normal" />
+  <xs:attribute name="LockIn"        type="textAttributeType"    default="no"  />
+  <xs:attribute name="Timeout"       type="integerAttributeType" default="45"   />
+  <xs:attribute name="imageAction"   type="xs:string" />
+  <xs:attribute name="doneAction"    type="xs:string" />
+  <xs:attribute name="cancelAction"  type="xs:string" />
+ </xs:complexType>
+</xs:element>
+
+
+
+</xs:schema>

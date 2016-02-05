@@ -1,0 +1,12 @@
+{
+	"name": "zehir/AastraIPPhone",
+	"description": "The official XML API of Aastra IP Phone",
+	
+	"require": {
+		"php": ">=5.3.3",
+	},
+	
+	"autoload": {
+        	"classmap": ["vendor/Aastra"],
+    }
+}
