@@ -1,7 +1,7 @@
 <?php
 ########################################################################################################
 # Aastra XML API Classes - AastraIPPhoneStatus
-# Copyright Aastra Telecom 2006-2010
+# Copyright Mitel Networks 2005-2015
 #
 # AastraIPPhoneStatus object.
 #
@@ -58,6 +58,16 @@ class AastraIPPhoneStatus extends AastraIPPhone {
 	function addEntry($index, $message, $type='', $timeout=NULL, $uri='', $icon=0, $color='')
 	{
 		$this->_entries[] = new AastraIPPhoneStatusEntry($index, $message, $type, $timeout, $uri, $icon, $color);
+	}
+
+	function addMessage($index, $message, $timeout=NULL, $uri='', $icon=0, $color='')
+	{
+		$this->_entries[] = new AastraIPPhoneStatusEntry($index, $message, '', $timeout, $uri, $icon, $color);
+	}
+
+	function addToaster($message, $uri='', $icon=0)
+	{
+		$this->_entries[] = new AastraIPPhoneStatusEntry('0', $message, 'toaster', NULL, $uri, $icon, '');
 	}
 
 	function render()

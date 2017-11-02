@@ -1,7 +1,7 @@
 <?php
 ########################################################################################################
 # Aastra XML API Classes - AastraIPPhoneInputScreen
-# Copyright Aastra Telecom 2005-2011
+# Copyright Mitel Networks 2005-2015
 #
 # AastraIPPhoneInputScreen object.
 #
@@ -22,12 +22,16 @@
 #     setLockIn(uri) to set the Lock-in tag to 'yes' and the GoodbyeLockInURI(optional)
 #          @uri		string, GoodByeLockInURI
 #     setLockInCall() to set the Lock-in tag to 'call' (optional)
+#     setCallProtection(notif) to protect the XML object against incoming calls
+#          @notif to enable/disable (false by default) the display of an incoming call notification (optional)
 #     setAllowAnswer() to set the allowAnswer tag to 'yes' (optional only for non softkey phones)
 #     setAllowDrop() to set the allowDrop tag to 'yes' (optional only for non softkey phones)
 #     setAllowXfer() to set the allowXfer tag to 'yes' (optional only for non softkey phones)
 #     setAllowConf() to set the allowConf tag to 'yes' (optional only for non softkey phones)
 #     setTimeout(timeout) to define a specific timeout for the XML object (optional)
 #          @timeout		integer (seconds)
+#     setBackgroundColor(color) to change the XML object background color (optional)
+#          @color		string, "red", "blue", ...
 #     addSoftkey(index,label,uri,icon_index) to add custom soktkeys to the object (optional)
 #          @index		integer, softkey number
 #          @label		string
@@ -319,6 +323,11 @@ class AastraIPPhoneInputScreen extends AastraIPPhone {
    			if($this->_lockin_uri!='') $out .= " GoodbyeLockInURI=\"".$this->escape($this->_lockin_uri)."\"";
 		}
 
+		# Call Protection
+		if($this->_callprotection!='') {
+			$out .= " CallProtection=\"{$this->_callprotection}\"";
+		}
+
 		# AllowAnswer
 		if($this->_allowAnswer == 'yes') $out .= " allowAnswer=\"yes\"";
 
@@ -333,6 +342,9 @@ class AastraIPPhoneInputScreen extends AastraIPPhone {
 
 		# TimeOut
 		if($this->_timeout!=0) $out .= " Timeout=\"{$this->_timeout}\"";
+
+		# Background color
+		if ($this->_background_color!='') $out .= " bgColor=\"{$this->_background_color}\"";
 
 		# End of the root tag
 		$out .= ">\n";

@@ -4,7 +4,7 @@
 #
 # Aastra SIP Phones 1.4.2 or better
 #
-# Copyright 2009-2011 Aastra Telecom Ltd
+# Copyright Mitel Networks 2005-2015
 #
 # Supported Aastra Phones
 #   All IP phones except Aastra9112i and Aastra9133i

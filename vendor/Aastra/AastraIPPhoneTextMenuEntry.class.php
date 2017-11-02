@@ -1,7 +1,7 @@
 <?php
 ################################################################################
 # Aastra XML API Classes - AastraIPPhoneTextMenuEntry
-# Copyright Aastra Telecom 2005-2010
+# Copyright Mitel Networks 2005-2015
 #
 # Internal class for AastraIPPhoneTextMenu object.
 ################################################################################
@@ -16,8 +16,12 @@ class AastraIPPhoneTextMenuEntry extends AastraIPPhone {
 	var $_base;
 	var $_split;
 	var $_color;
+	var $_iconRight1;
+	var $_iconRight2;
+	var $_iconRight3;
+	var $_iconRight4;
 
-	function AastraIPPhoneTextMenuEntry($name, $url, $selection, $icon, $dial, $line, $color, $split, $base)
+	function AastraIPPhoneTextMenuEntry($name, $url, $selection, $icon, $dial, $line, $color, $split, $base, $iconRight1=NULL, $iconRight2=NULL, $iconRight3=NULL, $iconRight4=NULL)
 	{
 		$this->_name=$name;
 		$this->_url=$url;
@@ -28,6 +32,10 @@ class AastraIPPhoneTextMenuEntry extends AastraIPPhone {
 		$this->_split=$split;
 		$this->_color=$color;
 		$this->_base=$base;
+		$this->_iconRight1=$iconRight1;
+		$this->_iconRight2=$iconRight2;
+		$this->_iconRight3=$iconRight3;
+		$this->_iconRight4=$iconRight4;
 	}
 
 	function getName()
@@ -121,6 +129,10 @@ class AastraIPPhoneTextMenuEntry extends AastraIPPhone {
 			else $xml .= " base=\"\"";
 			}
 		if($this->_icon!=NULL) $xml .= " icon=\"{$this->_icon}\"";
+		if($this->_iconRight1!=NULL) $xml .= " iconr1=\"{$this->_iconRight1}\"";
+		if($this->_iconRight2!=NULL) $xml .= " iconr2=\"{$this->_iconRight2}\"";
+		if($this->_iconRight3!=NULL) $xml .= " iconr3=\"{$this->_iconRight3}\"";
+		if($this->_iconRight4!=NULL) $xml .= " iconr4=\"{$this->_iconRight4}\"";
 		$xml .= ">\n";
 
 		# Prompt

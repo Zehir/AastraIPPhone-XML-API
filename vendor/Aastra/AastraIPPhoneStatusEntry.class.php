@@ -1,7 +1,7 @@
 <?php
 ################################################################################
 # Aastra XML API Classes - AastraIPPhoneStatusEntry
-# Copyright Aastra Telecom 2007-2010
+# Copyright Mitel Networks 2005-2015
 #
 # Internal class for AastraIPPhoneStatus object.
 ################################################################################

@@ -2,7 +2,7 @@
 ################################################################################
 # Aastra XML API Classes - AastraIPPhoneInputScreenEntry
 # Firmware 2.0 or better
-# Copyright Aastra Telecom 2005-2010
+# Copyright Mitel Networks 2005-2015
 #
 # Internal class for AastraIPPhoneInputScreen object.
 ################################################################################

@@ -1,7 +1,7 @@
 <?php
 ########################################################################################################
 # Aastra XML API Classes - AastraIPPhoneImageScreen
-# Copyright Aastra Telecom 2008-2012
+# Copyright Mitel Networks 2005-2015
 #
 # AastraIPPhoneImageScreen object.
 #
@@ -19,12 +19,16 @@
 #     setLockIn(uri) to set the Lock-in tag to 'yes' and the GoodbyeLockInURI(optional)
 #          @uri		string, GoodByeLockInURI
 #     setLockInCall() to set the Lock-in tag to 'call' (optional)
+#     setCallProtection(notif) to protect the XML object against incoming calls
+#          @notif to enable/disable (false by default) the display of an incoming call notification (optional)
 #     setAllowAnswer() to set the allowAnswer tag to 'yes' (optional, only for non softkey phones)
 #     setAllowDrop() to set the allowDrop tag to 'yes' (optional, only for non softkey phones)
 #     setAllowXfer() to set the allowXfer tag to 'yes' (optional, only for non softkey phones)
 #     setAllowConf() to set the allowConf tag to 'yes' (optional, only for non softkey phones)
 #     setTimeout(timeout) to define a specific timeout for the XML object (optional)
 #          @timeout		integer (seconds)
+#     setBackgroundColor(color) to change the XML object background color (optional)
+#          @color		string, "red", "blue", ...
 #     addSoftkey(index,label,uri,icon_index) to add custom soktkeys to the object (optional)
 #          @index		integer, softkey number
 #          @label		string
@@ -42,8 +46,9 @@
 #          @flush		boolean optional, output buffer to be flushed out or not.
 #
 # Specific to the object
-#     setImage(image) to define the image to be displayed
+#     setImage(image,scaling) to define the image to be displayed
 #          @image		string
+#					 @scaling	scaling indicator "yes"/"no" optional
 #     setGDImage(GDImage) to use a GDImage for display, the size is forced to 40x144
 #          @GDImage		GDImage
 #     setSPImage(SPImage) to use a SPImage for display, the size is forced to 40x144
@@ -51,6 +56,7 @@
 #     setAlignment(vertical,horizontal) to define image alignment
 #          @vertical		string, "top", "middle", "bottom"
 #          @horizontal	string, "left", "middle", "right"
+#			setScaling() to indicate if image must be scaled
 #     setSize(height,width) to define image size
 #          @height		integer (pixels)
 #          @width		integer (pixels)
@@ -118,6 +124,7 @@ class AastraIPPhoneImageScreen extends AastraIPPhone {
 	var $_image;
 	var $_verticalAlign=NULL;
 	var $_horizontalAlign=NULL;
+	var $_scaled='';
 	var $_height=NULL;
 	var $_width=NULL;
 	var $_allowDTMF='';
@@ -138,6 +145,11 @@ class AastraIPPhoneImageScreen extends AastraIPPhone {
 	{
 		$this->_verticalAlign = $vertical;
 		$this->_horizontalAlign = $horizontal;
+	}
+
+	function setScaling()
+	{
+		$this->_scaled = 'yes';
 	}
 
 	function setSize($height,$width)
@@ -249,8 +261,16 @@ class AastraIPPhoneImageScreen extends AastraIPPhone {
    			if($this->_lockin_uri!='') $out .= " GoodbyeLockInURI=\"".$this->escape($this->_lockin_uri)."\"";
 		}
 
+		# Call Protection
+		if($this->_callprotection!='') {
+			$out .= " CallProtection=\"{$this->_callprotection}\"";
+		}
+
 		# Timeout
 		if($this->_timeout!=0) $out .= " Timeout=\"{$this->_timeout}\"";
+
+		# Background color
+		if ($this->_background_color!='') $out .= " bgColor=\"{$this->_background_color}\"";
 
 		# AllowAnswer
 		if ($this->_allowAnswer == 'yes') $out .= " allowAnswer=\"yes\"";
@@ -314,6 +334,9 @@ class AastraIPPhoneImageScreen extends AastraIPPhone {
 
 		# Width
 		if($this->_width!=NULL) $out .= " width=\"{$this->_width}\"";
+
+		# Scaling
+		if($this->_scaled!='') $out .= " scaled=\"{$this->_scaled}\"";
 
 		# Image and end of image tag
 		$out .= ">{$this->_image}</Image>\n";

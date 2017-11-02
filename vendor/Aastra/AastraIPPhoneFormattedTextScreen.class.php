@@ -1,7 +1,7 @@
 <?php
 ########################################################################################################
 # Aastra XML API Classes - AastraIPFormattedPhoneTextScreen
-# Copyright Aastra Telecom 2008-2010
+# Copyright Mitel Networks 2005-2015
 #
 # AastraIPPhoneFormattedTextScreen object.
 #
@@ -19,12 +19,16 @@
 #     setLockIn(uri) to set the Lock-in tag to 'yes' and the GoodbyeLockInURI(optional)
 #          @uri		string, GoodByeLockInURI
 #     setLockInCall() to set the Lock-in tag to 'call' (optional)
+#     setCallProtection(notif) to protect the XML object against incoming calls
+#          @notif to enable/disable (false by default) the display of an incoming call notification (optional)
 #     setAllowAnswer() to set the allowAnswer tag to 'yes' (optional only for non softkey phones)
 #     setAllowDrop() to set the allowDrop tag to 'yes' (optional only for non softkey phones)
 #     setAllowXfer() to set the allowXfer tag to 'yes' (optional only for non softkey phones)
 #     setAllowConf() to set the allowConf tag to 'yes' (optional only for non softkey phones)
 #     setTimeout(timeout) to define a specific timeout for the XML object (optional)
 #          @timeout		integer (seconds)
+#     setBackgroundColor(color) to change the XML object background color (optional)
+#          @color		string, "red", "blue", ...
 #     addSoftkey(index,label,uri,icon_index) to add custom soktkeys to the object (optional)
 #          @index		integer, softkey number
 #          @label		string
@@ -42,16 +46,20 @@
 #          @flush		boolean optional, output buffer to be flushed out or not.
 #
 # Specific to the object
-#     addLine(text,size,align,color) to add a formatted line
+#     addLine(text,size,align,color,wrap,blink) to add a formatted line
 #          @text		string
 #          @size		string, optional, "small", "double"  or "large"
 #          @align		string, optional, "left", "right" or "center"
 #          @color		string, optional, "red", "black", ...
-#     addText(text,size,align,$color) to add a formatted text as formatted lines
+#          @wrap    boolean, optional, "yes", "no" (default)
+#          @blink   string, optional, "slow", "fast" or "no" (default)
+#     addText(text,size,align,$color,wrap,blink) to add a formatted text as formatted lines
 #          @text		string, can include carriage returns
 #          @size		string, optional, "double"
 #          @align		string, optional, "left", "right" or "center"
 #          @color		string, optional, "red", "black", ...
+#          @wrap    boolean, optional, "yes", "no" (default)
+#          @blink   string, optional, "slow", "fast" or "no" (default)
 #     setScrollStart(height) to define the beginning of the scrolling section and its height
 #          @height		integer
 #     setScrollEnd() to define the end of the scrolling section
@@ -66,6 +74,7 @@
 #          @uri		string
 #     setScrollRight(uri) to set the URI to be called when the user presses the Right arrow (optional)
 #          @uri		string
+#     setNoFontMono() to allow the override of the monotype font with a proportional font (6867i. 6869i and 6873i only)
 #     setDial(number,line) to set the number to be dialed as well as the line to use when going off-hook or with the custom softkey Softkey::Dial2
 #          @number  string
 #          @line    integer (optional) 
@@ -102,26 +111,27 @@ class AastraIPPhoneFormattedTextScreen extends AastraIPPhone {
 	var $_scrollRight='';
 	var $_dialNumber='';
 	var $_dialLine='';
+	var $_fontMono='';
 
-	function addLine($text, $size=NULL, $align=NULL, $color=NULL)
+	function addLine($text, $size=NULL, $align=NULL, $color=NULL, $wrap=NULL, $blink=NULL)
 	{
-		$this->_entries[] = new AastraIPPhoneFormattedTextScreenEntry($text, $size, $align, $color, 'normal');
+		$this->_entries[] = new AastraIPPhoneFormattedTextScreenEntry($text, $size, $align, $color, $wrap, $blink, 'normal');
 	}
 
-	function addText($text, $size=NULL, $align=NULL, $color=NULL)
+	function addText($text, $size=NULL, $align=NULL, $color=NULL, $wrap=NULL, $blink=NULL)
 	{
 		$pieces=explode("\n",wordwrap($text,$this->_display_size,"\n",True));
-		foreach($pieces as $value) $this->_entries[] = new AastraIPPhoneFormattedTextScreenEntry($value, $size, $align, $color, 'normal');
+		foreach($pieces as $value) $this->_entries[] = new AastraIPPhoneFormattedTextScreenEntry($value, $size, $align, $color, $wrap, $blink, 'normal');
 	}
 
 	function setScrollStart($height)
 	{
-		$this->_entries[] = new AastraIPPhoneFormattedTextScreenEntry(NULL, $height, NULL, NULL, 'scrollstart');
+		$this->_entries[] = new AastraIPPhoneFormattedTextScreenEntry(NULL, $height, NULL, NULL, NULL, NULL, 'scrollstart');
 	}
 
 	function setScrollEnd()
 	{
-		$this->_entries[] = new AastraIPPhoneFormattedTextScreenEntry(NULL, NULL, NULL, NULL, 'scrollend');
+		$this->_entries[] = new AastraIPPhoneFormattedTextScreenEntry(NULL, NULL, NULL, NULL, NULL, NULL, 'scrollend');
 	}
 
 	function setDoneAction($uri)
@@ -160,6 +170,11 @@ class AastraIPPhoneFormattedTextScreen extends AastraIPPhone {
 		$this->_dialLine = $dialLine;
 	}
 
+	function setNoFontMono()
+	{
+		$this->_fontMono = 'no';
+	}
+
 	function render()
 	{
 		# Beginning of root tag
@@ -191,6 +206,11 @@ class AastraIPPhoneFormattedTextScreen extends AastraIPPhone {
    			if($this->_lockin_uri!='') $out .= " GoodbyeLockInURI=\"".$this->escape($this->_lockin_uri)."\"";
 		}
 
+		# Call Protection
+		if($this->_callprotection!='') {
+			$out .= " CallProtection=\"{$this->_callprotection}\"";
+		}
+
 		# AllowAnswer
 		if($this->_allowAnswer == 'yes') $out .= " allowAnswer=\"yes\"";
 
@@ -205,6 +225,9 @@ class AastraIPPhoneFormattedTextScreen extends AastraIPPhone {
 
 		# TimeOut
 		if($this->_timeout!=0) $out .= " Timeout=\"{$this->_timeout}\"";
+
+		# Background color
+		if ($this->_background_color!='') $out .= " bgColor=\"{$this->_background_color}\"";
 	
 		# AllowDTMF
 		if($this->_allowDTMF=='yes') $out .= " allowDTMF=\"yes\"";
@@ -214,6 +237,9 @@ class AastraIPPhoneFormattedTextScreen extends AastraIPPhone {
 		if($this->_scrollDown!='') $out .= " scrollDown=\"".$this->escape($this->_scrollDown)."\"";
 		if($this->_scrollLeft!='') $out .= " scrollLeft=\"".$this->escape($this->_scrollLeft)."\"";
 		if($this->_scrollRight!='') $out .= " scrollRight=\"".$this->escape($this->_scrollRight)."\"";
+
+		# Font Monotype
+		if ($this->_fontMono == 'no') $out .= " fontMono=\"no\"";
 	
 		# End of Root tag
 		$out .= ">\n";
@@ -271,7 +297,5 @@ class AastraIPPhoneFormattedTextScreen extends AastraIPPhone {
 		# Return XML object
 		return $out;
 	}
-
-
 }
 ?>

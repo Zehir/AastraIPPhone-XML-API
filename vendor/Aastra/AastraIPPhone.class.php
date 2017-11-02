@@ -1,7 +1,7 @@
 <?php
 ###################################################################################################
 # Aastra XML API Classes - AastraIPPhone
-# Copyright Aastra Telecom 2005-2010
+# Copyright Mitel Networks 2005-2015
 #
 # AastraIPPhone is the root class for all the Aastra XML objects.
 #
@@ -10,11 +10,11 @@
 #          @title		string
 #          @color		string, "red", "blue", ... (optional)
 #     setTitleWrap() to set the title to be wrapped on 2 lines (optional)
-#     setTopTitle(title,color,icon_index) to set the Top Title of the XML screen (6739i only)
+#     setTopTitle(title,color,icon_index) to set the Top Title of the XML screen
 #          @title		string
 #          @color		string, "red", "blue", ... (optional)
 #          @icon_index	integer, icon number
-#     setBackgroundColor(color) to change the XML object background color (optional 6739i only)
+#     setBackgroundColor(color) to change the XML object background color (optional)
 #          @color		string, "red", "blue", ...
 #     setCancelAction(uri) to set the cancel parameter with the URI to be called on Cancel (optional)
 #          @uri		string
@@ -23,6 +23,8 @@
 #     setLockIn(uri) to set the Lock-in tag to 'yes' and the GoodbyeLockInURI(optional)
 #          @uri		string, GoodByeLockInURI
 #     setLockInCall() to set the Lock-in tag to 'call' (optional)
+#     setCallProtection(notif) to protect the XML object against incoming calls
+#          @notif to enable/disable (false by default) the display of an incoming call notification (optional)
 #     setAllowAnswer() to set the allowAnswer tag to 'yes' (optional only for non softkey phones)
 #     setAllowDrop() to set the allowDrop tag to 'yes' (optional only for non softkey phones)
 #     setAllowXfer() to set the allowXfer tag to 'yes' (optional only for non softkey phones)
@@ -65,14 +67,15 @@ class AastraIPPhone {
 	var $_cancelAction='';
 	var $_refreshTimeout=0;
 	var $_refreshURL='';
-    var $_beep='';
+  var $_beep='';
 	var $_lockin='';
+	var $_callprotection='';
 	var $_timeout=0;
 	var $_allowAnswer='';
 	var $_allowDrop='';
 	var $_allowXfer='';
 	var $_allowConf='';
-	var $_bcolor='';
+	var $_background_color='';
 	var $_toptitle='';
 	var $_toptitle_icon='';
 	var $_toptitle_color='';
@@ -88,7 +91,7 @@ class AastraIPPhone {
 		$this->_destroyOnExit='';
 		$this->_refreshTimeout=0;
 		$this->_refreshURL='';
-       	$this->_beep='';
+   	$this->_beep='';
 		$this->_lockin='';
 		$this->_lockin_uri='';
 		$this->_timeout=0;
@@ -105,7 +108,7 @@ class AastraIPPhone {
 
 	function setBackgroundColor($color)
 	{
-		$this->_bcolor = $color;
+		$this->_background_color = $color;
 	}
 
 	function setTitle($title,$color='')
@@ -157,6 +160,15 @@ class AastraIPPhone {
 	function setLockInCall() 
 	{
 		$this->_lockin='call';
+	}
+
+	function setCallProtection($notif=False) 
+	{
+	  if($notif==True) {
+			$this->_callprotection='notif';
+		} else {
+			$this->_callprotection='yes';
+		}
 	}
 
 	function setTimeout($timeout) 
@@ -213,7 +225,8 @@ class AastraIPPhone {
 
 	function addIcon($index, $icon)
 	{
-		if(Aastra_is_icons_supported()) $this->_icons[$index] = new AastraIPPhoneIconEntry($index, $icon);
+#		if(Aastra_is_icons_supported()) $this->_icons[$index] = new AastraIPPhoneIconEntry($index, $icon);
+    $this->_icons[$index] = new AastraIPPhoneIconEntry($index, $icon);
 	}
 
 	function escape($string)

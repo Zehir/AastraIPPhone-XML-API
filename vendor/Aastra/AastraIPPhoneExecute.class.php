@@ -1,7 +1,7 @@
 <?php
 ########################################################################################################
 # Aastra XML API Classes - AastraIPPhoneExecute
-# Copyright Aastra Telecom 2006-2010
+# Copyright Mitel Networks 2005-2015
 #
 # AastraIPPhoneExecute object.
 #
@@ -16,9 +16,10 @@
 #
 # Specific to the object
 #     setTriggerDestroyOnExit() to set the triggerDestroyOnExit tag to "yes" (optional)
-#     addEntry(url,interruptCall) to add an action to be executed.
+#     addEntry(url,interruptCall,title) to add an action to be executed.
 #          @url		string
 #          @interruptCall	string, optional, "yes" or "no"	
+#          @title string, optional, title to be used in Wav.Play screen
 #
 # Example
 #     require_once('AastraIPPhoneExecute.class.php');
@@ -36,9 +37,9 @@ class AastraIPPhoneExecute extends AastraIPPhone {
 	var $_defaultIndex='';
 	var $_triggerDestroyOnExit='';
 
-	function addEntry($url,$interruptCall=NULL)
+	function addEntry($url,$interruptCall=NULL,$title='')
 	{
-		$this->_entries[] = new AastraIPPhoneExecuteEntry($url,$interruptCall);
+		$this->_entries[] = new AastraIPPhoneExecuteEntry($url,$interruptCall,$title);
 	}
 
 	function setTriggerDestroyOnExit() 

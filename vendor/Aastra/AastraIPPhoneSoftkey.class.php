@@ -1,7 +1,7 @@
 <?php
 ########################################################################################################
 # Aastra XML API Classes - AastraIPPhoneConfiguration
-# Copyright Mitel Networks 2005-2015
+# Copyright Mitel Networks 2005-2016
 #
 # AastraIPPhoneConfiguration object.
 #
@@ -15,8 +15,6 @@
 #          @flush		boolean optional, output buffer to be flushed out or not.
 #
 # Specific to the object
-#     setType(type) to set the type of configuration object (optional)
-#          @type		string, configuration change type
 #     addEntry(parameter,value,type) to add a configuration change
 #          @parameter	string, parameter name
 #          @value		string, parameter value
@@ -27,24 +25,21 @@
 # Example
 #     require_once('AastraIPPhoneConfiguration.class.php');
 #     $configuration = new AastraIPPhoneConfiguration();
-#     $configuration->addEntry('softkey1 label','Test');
-#     $configuration->addEntry('softkey1 type','xml');
-#     $configuration->setTriggerDestroyOnExit();
-#     $configuration->setBeep();
+#     $configuration->addEntry('topsoftkey1 label','Test');
+#     $configuration->addEntry('topsoftkey1 background color','blue');
 #     $configuration->output();
 #
 ########################################################################################################
 
 require_once('AastraIPPhone.class.php');
-require_once('AastraIPPhoneConfigurationEntry.class.php');
+require_once('AastraIPPhoneSoftkeyParam.class.php');
 
-class AastraIPPhoneConfiguration extends AastraIPPhone {
-	var $_type='';
+class AastraIPPhoneSoftkey extends AastraIPPhone {
 	var $_triggerDestroyOnExit='';
 	
-	function addEntry($parameter, $value, $type='')
+	function addEntry($parameter, $value)
 	{
-		$this->_entries[] = new AastraIPPhoneConfigurationEntry($parameter, $value, $type);
+		$this->_entries[] = new AastraIPPhoneSoftkeyParam($parameter, $value);
 	}
 
 	function setTriggerDestroyOnExit() 
@@ -52,24 +47,16 @@ class AastraIPPhoneConfiguration extends AastraIPPhone {
 		$this->_triggerDestroyOnExit="yes";
 	}
 
-	function setType($type) 
-	{
-		$this->_type=$type;
-	}
-
 	function render()
 	{
 		# Beginning of root tag
-		$out = "<AastraIPPhoneConfiguration";
+		$out = "<AastraIPPhoneSoftkey";
 
 		# Beep
 		if($this->_beep=='yes') $out .= " Beep=\"yes\"";
 
 		# TriggerDestroyOnExit
 		if($this->_triggerDestroyOnExit=='yes') $out .= " triggerDestroyOnExit=\"yes\"";
-
-		# Type
-		if($this->_type!='') $out .= " setType=\"{$this->_type}\"";
 
 		# End of root tag
 		$out .= ">\n";
@@ -81,7 +68,7 @@ class AastraIPPhoneConfiguration extends AastraIPPhone {
 			}
 
 		# End tag
-		$out .= "</AastraIPPhoneConfiguration>\n";
+		$out .= "</AastraIPPhoneSoftkey>\n";
 
 		# Return XML object
 		return($out);

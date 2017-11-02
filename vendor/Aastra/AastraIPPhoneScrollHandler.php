@@ -2,7 +2,7 @@
 #############################################################################
 # AastraIPPhoneScrollHandler
 #
-# Copyright 2009 Aastra Telecom Ltd
+# Copyright Mitel Networks 2005-2015
 #
 # Note
 #		This script is a helper script of the AastraIPPhoneScrollableTextMenu 

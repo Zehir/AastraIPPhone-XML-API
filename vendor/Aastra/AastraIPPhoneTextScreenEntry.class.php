@@ -1,7 +1,7 @@
 <?php
 ################################################################################
 # Aastra XML API Classes - AastraIPPhoneTextScreenEntry
-# Copyright Aastra Telecom 2007-2011
+# Copyright Mitel Networks 2005-2015
 #
 # Internal class for AastraIPPhoneTextScreen object.
 ################################################################################

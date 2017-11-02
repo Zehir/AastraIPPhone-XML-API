@@ -1,7 +1,7 @@
 <?php
 ########################################################################################################
 # Aastra XML API Classes - AastraIPPhoneCallLog
-# Copyright Aastra Telecom 2005-2012
+# Copyright Mitel Networks 2005-2015
 #
 # AastraIPPhoneCallLog object.
 #

@@ -1,7 +1,7 @@
 <?php
 ########################################################################################################
 # Aastra XML API Classes - AastraIPPhoneTextMenu
-# Copyright Aastra Telecom 2005-2010
+# Copyright Mitel Networks 2005-2015
 #
 # AastraIPPhoneTextMenu object.
 #
@@ -22,12 +22,16 @@
 #     setLockIn(uri) to set the Lock-in tag to 'yes' and the GoodbyeLockInURI(optional)
 #          @uri		string, GoodByeLockInURI
 #     setLockInCall() to set the Lock-in tag to 'call' (optional)
+#     setCallProtection(notif) to protect the XML object against incoming calls
+#          @notif to enable/disable (false by default) the display of an incoming call notification (optional)
 #     setAllowAnswer() to set the allowAnswer tag to 'yes' (optional only for non softkey phones)
 #     setAllowDrop() to set the allowDrop tag to 'yes' (optional only for non softkey phones)
 #     setAllowXfer() to set the allowXfer tag to 'yes' (optional only for non softkey phones)
 #     setAllowConf() to set the allowConf tag to 'yes' (optional only for non softkey phones)
 #     setTimeout(timeout) to define a specific timeout for the XML object (optional)
 #          @timeout		integer (seconds)
+#     setBackgroundColor(color) to change the XML object background color (optional)
+#          @color		string, "red", "blue", ...
 #     addSoftkey(index,label,uri,icon_index) to add custom soktkeys to the object (optional)
 #          @index		integer, softkey number
 #          @label		string
@@ -52,10 +56,12 @@
 #     setWrapList() to allow 2 lines items (optional)
 #     setScrollConstrain() to avoid the list to wrap
 #     setNumberLaunch() to allow number selection
+#     setTouchLaunch() to allow item direct selection (6873i only)
+#     setNoFontMono() to allow the override of the monotype font with a proportional font (6867i. 6869i and 6873i only)
 #     setBase(base) to configure the menuItem base URI
 #          @base		string
 #     resetBase() to reset the menuItem base URI
-#     addEntry(name,url,selection,icon,dial,line,color,split) to add an element in the list to be displayed
+#     addEntry(name,url,selection,icon,dial,line,color,split,iconr1,iconr2,iconr3,iconr4) to add an element in the list to be displayed
 #          @name		string or array(0=>Line1,1=>Line2,2=>Offset,3=>Char,4=>Mode)
 #          @url		string
 #          @selection	string (optional)
@@ -64,6 +70,10 @@
 #          @line		integer, SIP line to use (optional)
 #          @color		string, "red", "black", ... (optional)
 #          @split		integer, position of the split between line 1 and line 2 (optional)
+#          @iconr1	integer (optional)
+#          @iconr2	integer (optional)
+#          @iconr3	integer (optional)
+#          @iconr4	integer (optional)
 #     setScrollUp(uri) to set the URI to be called when the user presses the Up arrow (optional)
 #          @uri		string
 #     setScrollDown(uri) to set the URI to be called when the user presses the Down arrow (optional)
@@ -113,9 +123,11 @@ class AastraIPPhoneTextMenu extends AastraIPPhone {
 	var $_maxitems='30';
 	var $_scrollConstrain='';
 	var $_numberLaunch='';
+	var $_touchLaunch='';
 	var $_scrollUp='';
 	var $_scrollDown='';
-       var $_unitScroll='';
+  var $_unitScroll='';
+	var $_fontMono='';
     
 	function setDefaultIndex($defaultIndex)
 	{
@@ -127,10 +139,23 @@ class AastraIPPhoneTextMenu extends AastraIPPhone {
 		$this->_style = $style;
 	}
 
-	function addEntry($name, $url, $selection=NULL, $icon=NULL, $dial=NULL, $line=NULL, $color='', $split=NULL)
+	function addEntry($name, $url, $selection=NULL, $icon=NULL, $dial=NULL, $line=NULL, $color='', $split=NULL, $iconRight1=NULL, $iconRight2=NULL, $iconRight3=NULL, $iconRight4=NULL)
 	{
 		if(!Aastra_is_icons_supported()) $icon=NULL;
-		$this->_entries[] = new AastraIPPhoneTextMenuEntry($name, $url, $selection, $icon, $dial, $line, $color, $split, NULL);
+		$this->_entries[] = new AastraIPPhoneTextMenuEntry( $name, 
+																												$url,
+																												$selection,
+																												$icon,
+																												$dial,
+																												$line,
+																												$color,
+																												$split,
+																												NULL, 
+																												$iconRight1,
+																												$iconRight2,
+																												$iconRight3,
+																												$iconRight4
+																											);
 	}
 
 	function setBase($base)
@@ -161,6 +186,16 @@ class AastraIPPhoneTextMenu extends AastraIPPhone {
 	function setNumberLaunch()
 	{
 		$this->_numberLaunch = 'yes';
+	}
+
+	function setTouchLaunch()
+	{
+		$this->_touchLaunch = 'yes';
+	}
+
+	function setNoFontMono()
+	{
+		$this->_fontMono = 'no';
 	}
 
 	function setScrollUp($uri)
@@ -212,6 +247,11 @@ class AastraIPPhoneTextMenu extends AastraIPPhone {
    			if($this->_lockin_uri!='') $out .= " GoodbyeLockInURI=\"".$this->escape($this->_lockin_uri)."\"";
 		}
 
+		# Call Protection
+		if($this->_callprotection!='') {
+			$out .= " CallProtection=\"{$this->_callprotection}\"";
+		}
+
 		# WrapList
 		if ($this->_wraplist=='yes') $out .= " wrapList=\"yes\"";
 
@@ -230,11 +270,20 @@ class AastraIPPhoneTextMenu extends AastraIPPhone {
 		# Timeout
 		if ($this->_timeout!=0) $out .= " Timeout=\"{$this->_timeout}\"";
 
+		# Background color
+		if ($this->_background_color!='') $out .= " bgColor=\"{$this->_background_color}\"";
+
 		# Prevent list wrap
 		if ($this->_scrollConstrain == 'yes') $out .= " scrollConstrain=\"yes\"";
 
 		# Number selection
 		if ($this->_numberLaunch == 'yes') $out .= " numberLaunch=\"yes\"";
+
+		# Number selection
+		if ($this->_touchLaunch == 'yes') $out .= " touchLaunch=\"yes\"";
+
+		# Font Monotype
+		if ($this->_fontMono == 'no') $out .= " fontMono=\"no\"";
 
 		# Scrolls up/down
 		if($this->_scrollUp!='') $out .= " scrollUp=\"".$this->escape($this->_scrollUp)."\"";
@@ -242,9 +291,6 @@ class AastraIPPhoneTextMenu extends AastraIPPhone {
 
 		# Unit scroll (6739i)
 		if ($this->_unitScroll == 'yes') $out .= " unitScroll=\"yes\"";
-
-		# Background color(6739i)
-		if ($this->_bcolor != '') $out .= " Bcolor=\"{$this->_bcolor}\"";
 
 		# End of root tag
 		$out .= ">\n";

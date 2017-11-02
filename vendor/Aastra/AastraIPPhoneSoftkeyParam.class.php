@@ -1,22 +1,20 @@
 <?php
 ################################################################################
-# Aastra XML API Classes - AastraIPPhoneConfigurationEntry
+# Aastra XML API Classes - AastraIPPhoneSoftkeyParam
 # Firmware 2.0 or better
 # Copyright Mitel Networks 2005-2015
 #
 # Internal class for AastraIPPhoneConfiguration object.
 ################################################################################
 
-class AastraIPPhoneConfigurationEntry extends AastraIPPhone {
+class AastraIPPhoneSoftkeyParam extends AastraIPPhone {
 	var $_parameter;
 	var $_value;
-	var $_type;
 
-	function AastraIPPhoneConfigurationEntry($parameter, $value, $type)
+	function AastraIPPhoneSoftkeyParam($parameter, $value)
 	{
 		$this->setParameter($parameter);
 		$this->setValue($value);
-		$this->setType($type);
 	}
 
 	function setParameter($parameter)
@@ -29,23 +27,15 @@ class AastraIPPhoneConfigurationEntry extends AastraIPPhone {
 		$this->_value = $value;
 	}
 
-	function setType($type)
-	{
-		$this->_type = $type;
-	}
-
 
 	function render()
 	{
 		$parameter = $this->escape($this->_parameter);
 		$value = $this->escape($this->_value);
-		$type = $this->escape($this->_type);
-		$xml = "<ConfigurationItem";
-		if($type!='') $xml.=" setType=\"".$type."\"";
-		$xml .=">\n";
+		$xml = "<SoftkeyItem>\n";
 		$xml .= "<Parameter>".$parameter."</Parameter>\n";
 		$xml .= "<Value>".$value."</Value>\n";
-		$xml .= "</ConfigurationItem>\n";
+		$xml .= "</SoftkeyItem>\n";
 		return($xml);
 	}
 }

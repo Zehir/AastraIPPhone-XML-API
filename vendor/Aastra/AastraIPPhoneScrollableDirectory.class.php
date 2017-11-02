@@ -4,7 +4,7 @@
 #
 # Aastra SIP Phones 1.4.2 or better
 #
-# Copyright 2009-2011 Aastra Telecom Ltd
+# Copyright Mitel Networks 2005-2015
 #
 # Supported Aastra Phones
 #   All IP phones except Aastra9112i and Aastra9133i
@@ -69,7 +69,7 @@
 #			$records[99]['office'] = "+1 (0) 555-123-1234";
 #			$records[99]['officeDigits'] = "1234";
 #			$records[99]['home'] = "044 555 22 33";
-#			$records[99]['company'] = "Aastra Telecom Inc.";
+#			$records[99]['company'] = "Mitel";
 #			$directory = new AastraIPPhoneScrollableDirectory();
 #			$directory->setTitle('Directory');
 #			$directory->setBackURI($XML_SERVER."?action=start");

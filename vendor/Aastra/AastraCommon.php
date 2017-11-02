@@ -1,7 +1,7 @@
 <?php 
 ###################################################################################################
 # Aastra XML API - AastraCommon.php
-# Copyright Aastra Telecom 2005-2010
+# Copyright Mitel Networks 2005-2015
 #
 # This file includes functions specific for Aastra XML API
 #

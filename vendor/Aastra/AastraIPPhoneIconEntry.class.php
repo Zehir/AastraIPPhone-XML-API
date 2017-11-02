@@ -1,8 +1,8 @@
 <?php
 ################################################################################
-# Aastra XML API Classes - AastraIPIconEntry
+# Aastra XML API Classes - AastraIPPhoneIconEntry
 # Firmware 2.0 or better
-# Copyright Aastra Telecom 2007-2010
+# Copyright Mitel Networks 2005-2015
 #
 # Internal class for AastraIPPhone object.
 ################################################################################

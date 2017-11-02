@@ -1,7 +1,7 @@
 <?php
 #########################################################################################################
 # Aastra XML API Classes - Aastra XML API Classes - AastraIPPhoneGDImage
-# Copyright Aastra Telecom 2007-2010
+# Copyright Mitel Networks 2005-2015
 #
 # Firmware 2.0 or better
 #
